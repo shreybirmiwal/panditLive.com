@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import DatePicker from "react-multi-date-picker"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BookingRequests = () => {
   const [selectedDays, setSelectedDays] = useState([]);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    timesAvailable: new Date(),
-    prayerType: 'homeWarming',
-    prayerLength: '',
+    name: null,
+    email: null,
+    phone: null,
+    timesAvailable: null,
+    prayerType: 'Pooja1',
+    prayerLength: null,
     requestPandit: 'noPreference',
   });
 
@@ -21,8 +23,49 @@ const BookingRequests = () => {
 
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form Data:', formData);
+
+    e.preventDefault()
+    console.log(formData)
+
+    if(formData.name === null || formData.email === null || formData.phone === null || formData.timesAvailable === null || formData.prayerType === null || formData.prayerLength === null || formData.requestPandit == null){
+      toast.error('Please fill out all forms', {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    });
+    } else {
+
+      console.log(formData.name)
+      console.log(formData.email)
+      console.log(formData.phone)
+      console.log(formData.timesAvailable)
+      console.log(formData.prayerType)
+      console.log(formData.prayerLength)
+      console.log(formData.requestPandit)
+
+    }
+
+  };
+
+  const handleSelectedDaysChange = (newSelectedDays) => {
+    setSelectedDays(newSelectedDays);
+
+    // Extract day, monthIndex, and year from each selected date
+    const simplifiedTimesAvailable = newSelectedDays.map(date => ({
+      day: date.day,
+      monthIndex: date.monthIndex + 1,
+      year: date.year,
+    }));
+
+    setFormData({
+      ...formData,
+      timesAvailable: simplifiedTimesAvailable,
+    });
   };
 
   return (
@@ -94,8 +137,8 @@ const BookingRequests = () => {
    <DatePanel />
   ]}
   value={selectedDays} 
-  onChange={setSelectedDays}
-/>
+  onChange={handleSelectedDaysChange}
+  />
   </div>
 </div>
 
@@ -112,9 +155,9 @@ const BookingRequests = () => {
     onChange={handleChange}
     className="mt-1 p-2 border rounded-md w-full"
   >
-    <option value="">Pooja1</option>
-    <option value="">Pooja2</option>
-    <option value="">Pooja3</option>
+    <option value="Pooja1">Pooja1</option>
+    <option value="Pooja2">Pooja2</option>
+    <option value="Pooja3">Pooja3</option>
     <option value="custom">Custom</option>
   </select>
 </div>
@@ -178,6 +221,8 @@ const BookingRequests = () => {
           </button>
         </div>
       </form>
+      <ToastContainer/>
+
     </div>
   );
 };
