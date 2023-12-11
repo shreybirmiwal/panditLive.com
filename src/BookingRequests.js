@@ -4,6 +4,10 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+//firebase imports
+import { db } from './firebase';
+import { collection, getDocs, setDoc, doc, query, addDoc } from "firebase/firestore";
+
 const BookingRequests = () => {
   const [selectedDays, setSelectedDays] = useState([]);
   const [formData, setFormData] = useState({
@@ -22,7 +26,7 @@ const BookingRequests = () => {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault()
     console.log(formData)
@@ -40,13 +44,23 @@ const BookingRequests = () => {
     });
     } else {
 
-      console.log(formData.name)
-      console.log(formData.email)
-      console.log(formData.phone)
-      console.log(formData.timesAvailable)
-      console.log(formData.prayerType)
-      console.log(formData.prayerLength)
-      console.log(formData.requestPandit)
+      const docRef = await addDoc(collection(db, 'requests'), {
+        Email: formData.email,
+        Length_hrs: Number(formData.prayerLength),
+        Name: formData.name,
+        PanditReq: formData.requestPandit,
+        Phone: formData.phone,
+        Type: formData.prayerType,
+        daysAvailable: formData.timesAvailable,
+      });
+
+      //console.log(formData.name)
+      //console.log(formData.email)
+      //console.log(formData.phone)
+      //console.log(formData.timesAvailable)
+      //console.log(formData.prayerType)
+      //console.log(formData.prayerLength)
+      //console.log(formData.requestPandit)
 
     }
 
@@ -54,17 +68,12 @@ const BookingRequests = () => {
 
   const handleSelectedDaysChange = (newSelectedDays) => {
     setSelectedDays(newSelectedDays);
-
-    // Extract day, monthIndex, and year from each selected date
-    const simplifiedTimesAvailable = newSelectedDays.map(date => ({
-      day: date.day,
-      monthIndex: date.monthIndex + 1,
-      year: date.year,
-    }));
-
+  
+    const isoFormattedDates = newSelectedDays.map(date => new Date(date.year, date.monthIndex, date.day).toISOString());
+  
     setFormData({
       ...formData,
-      timesAvailable: simplifiedTimesAvailable,
+      timesAvailable: isoFormattedDates,
     });
   };
 
