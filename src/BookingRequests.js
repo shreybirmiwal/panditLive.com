@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import MultipleDatePicker from 'react-multiple-datepicker'
+import DatePicker from "react-multi-date-picker"
+import DatePanel from "react-multi-date-picker/plugins/date_panel"
 
 const BookingRequests = () => {
   const [selectedDays, setSelectedDays] = useState([]);
@@ -18,11 +19,6 @@ const BookingRequests = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDateChange = (dates) => {
-    console.log(dates)
-    setSelectedDays(dates);
-    setFormData({ ...formData, timesAvailable: dates });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,7 +63,7 @@ const BookingRequests = () => {
 
         <div className="mb-4">
           <label htmlFor="phone" className="block text-sm font-medium text-gray-600">
-            Phone Number
+            Phone Number (No dashes)
           </label>
           <input
             type="tel"
@@ -84,25 +80,65 @@ const BookingRequests = () => {
 
 
 
-        <MultipleDatePicker
-          onSubmit={dates => handleDateChange(dates)}
-        />
+        <div className="mb-4">
+  <label htmlFor="timesAvailable" className="block text-sm font-medium text-gray-600">
+    Days Available
+  </label>
+  <span className="absolute top-2 left-3 text-gray-400">
+      {selectedDays.length === 0 ? 'Select dates' : ''}
+    </span>
+  <div className="mt-1 p-2 border rounded-md w-full relative">
+  <DatePicker
+  multiple
+  plugins={[
+   <DatePanel />
+  ]}
+  value={selectedDays} 
+  onChange={setSelectedDays}
+/>
+  </div>
+</div>
 
-      <div className="mb-4">
-        <label htmlFor="prayerType" className="block text-sm font-medium text-gray-600">
-          Type of Prayer
-        </label>
-        <select className="mt-1 p-2 border rounded-md w-full">
-          <option value="homeWarming">Home Warming</option>
-          <option value="car">Car</option>
-          <option value="example1">Example1</option>
-          <option value="custom">Custom</option>
-        </select>
-      </div>
+
+
+<div className="mb-4">
+  <label htmlFor="prayerType" className="block text-sm font-medium text-gray-600">
+    Type of Prayer
+  </label>
+  <select
+    id="prayerType"
+    name="prayerType"
+    value={formData.prayerType}
+    onChange={handleChange}
+    className="mt-1 p-2 border rounded-md w-full"
+  >
+    <option value="">Pooja1</option>
+    <option value="">Pooja2</option>
+    <option value="">Pooja3</option>
+    <option value="custom">Custom</option>
+  </select>
+</div>
+
+{formData.prayerType === 'custom' && (
+  <div className="mb-4">
+    <label htmlFor="customPrayerType" className="block text-sm font-medium text-gray-600">
+      Custom Type of Prayer
+    </label>
+    <input
+      type="text"
+      id="customPrayerType"
+      name="customPrayerType"
+      value={formData.customPrayerType}
+      onChange={handleChange}
+      className="mt-1 p-2 border rounded-md w-full"
+      placeholder="Enter custom type of prayer"
+    />
+  </div>
+)}
       
         <div className="mb-4">
           <label htmlFor="prayerLength" className="block text-sm font-medium text-gray-600">
-            Length of Prayer
+            Length of Prayer (Hours)
           </label>
           <input
             type="number"
@@ -112,6 +148,7 @@ const BookingRequests = () => {
             onChange={handleChange}
             className="mt-1 p-2 border rounded-md w-full"
             placeholder="Enter the length of prayer"
+            step="0.5"
           />
         </div>
 
@@ -126,6 +163,9 @@ const BookingRequests = () => {
           className="mt-1 p-2 border rounded-md w-full"
         >
           <option value="noPreference">No Preference</option>
+          <option value="Pandit 1">Pandit 1</option>
+          <option value="Pandit 2">Pandit 2</option>
+          <option value="Pandit 3">Pandit 3</option>
         </select>
       </div>
 
