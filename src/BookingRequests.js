@@ -18,6 +18,7 @@ const BookingRequests = () => {
     prayerType: 'Pooja1',
     prayerLength: null,
     requestPandit: 'noPreference',
+    extraNotes: ''
   });
 
   const handleChange = (e) => {
@@ -31,7 +32,7 @@ const BookingRequests = () => {
     e.preventDefault()
     console.log(formData)
 
-    if(formData.name === null || formData.email === null || formData.phone === null || formData.timesAvailable === null || formData.prayerType === null || formData.prayerLength === null || formData.requestPandit == null){
+    if(formData.name === null || formData.email === null || formData.phone === null || formData.timesAvailable === null ||formData.timesAvailable.length === 0 || formData.prayerType === null || formData.prayerLength === null || formData.requestPandit == null){
       toast.error('Please fill out all forms', {
         position: "top-left",
         autoClose: 5000,
@@ -52,7 +53,19 @@ const BookingRequests = () => {
         Phone: formData.phone,
         Type: formData.prayerType,
         daysAvailable: formData.timesAvailable,
+        extraNotes: formData.extraNotes
       });
+
+      toast.success('Success!', {
+        position: "top-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    });
 
       //console.log(formData.name)
       //console.log(formData.email)
@@ -79,7 +92,7 @@ const BookingRequests = () => {
 
   return (
     <div className="container mx-auto mt-8">
-      <h1 className="text-3xl font-bold mb-4">Booking Requests</h1>
+      <h1 className="text-3xl font-bold mb-8 mt-8 max-w-md mx-auto ">Booking Requests</h1>
 
       <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -136,9 +149,7 @@ const BookingRequests = () => {
   <label htmlFor="timesAvailable" className="block text-sm font-medium text-gray-600">
     Days Available
   </label>
-  <span className="absolute top-2 left-3 text-gray-400">
-      {selectedDays.length === 0 ? 'Select dates' : ''}
-    </span>
+
   <div className="mt-1 p-2 border rounded-md w-full relative">
   <DatePicker
   multiple
@@ -221,6 +232,23 @@ const BookingRequests = () => {
         </select>
       </div>
 
+      
+
+      <div className="mb-4">
+          <label htmlFor="extraNotes" className="block text-sm font-medium text-gray-600">
+            Extra Notes
+          </label>
+          <input
+            type="text"
+            id="extraNotes"
+            name="extraNotes"
+            value={formData.extraNotes}
+            onChange={handleChange}
+            className="mt-1 p-2 border rounded-md w-full"
+            placeholder="Extra Notes:"
+          />
+        </div>
+
         <div className="mb-4">
           <button
             type="submit"
@@ -229,6 +257,10 @@ const BookingRequests = () => {
             Submit
           </button>
         </div>
+
+
+
+
       </form>
       <ToastContainer/>
 
