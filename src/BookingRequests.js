@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { db } from './firebase';
 import { collection, getDocs, setDoc, doc, query, addDoc } from "firebase/firestore";
 
-const BookingRequests = () => {
+const BookingRequests = ({allPandits, setAllPandits}) => {
   const [selectedDays, setSelectedDays] = useState([]);
   const [formData, setFormData] = useState({
     name: null,
@@ -45,13 +45,19 @@ const BookingRequests = () => {
     });
     } else {
 
+      var prayerTYPE = formData.prayerType;
+
+      if(formData.prayerType === "custom"){
+        prayerTYPE = formData.customPrayerType
+      }
+
       const docRef = await addDoc(collection(db, 'requests'), {
         Email: formData.email,
         Length_hrs: Number(formData.prayerLength),
         Name: formData.name,
         PanditReq: formData.requestPandit,
         Phone: formData.phone,
-        Type: formData.prayerType,
+        Type: prayerTYPE,
         daysAvailable: formData.timesAvailable,
         extraNotes: formData.extraNotes
       });
@@ -221,15 +227,16 @@ const BookingRequests = () => {
           Request a Pandit
         </label>
         <select
-          id="requestPandit"
-          name="requestPandit"
-          className="mt-1 p-2 border rounded-md w-full"
-        >
-          <option value="noPreference">No Preference</option>
-          <option value="Pandit 1">Pandit 1</option>
-          <option value="Pandit 2">Pandit 2</option>
-          <option value="Pandit 3">Pandit 3</option>
-        </select>
+        id="requestPandit"
+        name="requestPandit"
+        className="mt-1 p-2 border rounded-md w-full"
+      >
+        {allPandits.map((pandit, index) => (
+          <option key={index} value={pandit}>
+            {pandit}
+          </option>
+        ))}
+      </select>
       </div>
 
       
