@@ -230,6 +230,8 @@ const BookingRequests = ({allPandits, setAllPandits}) => {
         id="requestPandit"
         name="requestPandit"
         className="mt-1 p-2 border rounded-md w-full"
+        value={formData.requestPandit}
+        onChange={handleChange}
       >
         {allPandits.map((pandit, index) => (
           <option key={index} value={pandit}>
